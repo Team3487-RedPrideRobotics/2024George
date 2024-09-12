@@ -140,4 +140,9 @@ public class SwerveSubsystem extends SubsystemBase {
   {
     return swerveDrive.swerveDriveConfiguration;
   }
+
+  public void lock()
+  {
+    swerveDrive.lockPose();
+  }
 }
