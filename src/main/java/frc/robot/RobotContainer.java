@@ -6,12 +6,18 @@ package frc.robot;
 
 import java.io.File;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -22,32 +28,33 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 public class RobotContainer
 {
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  final CommandXboxController driverXbox = new CommandXboxController(0);
-  // The robot's subsystems and commands are defined here...
-  private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                                                         "swerve"));
+  final CommandXboxController m_driveController = new CommandXboxController(1);
+  private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
+  private final PathPlannerPath m_10ft_forward = PathPlannerPath.fromPathFile("Straight Line");                                                              
+
+  public SendableChooser<Command> autoChooser;
   public RobotContainer()
   {
     configureBindings();
     
-    Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> MathUtil.applyDeadband(driverXbox.getRightX(), OperatorConstants.RIGHT_X_DEADBAND));
+    Command driveFieldOrientedAngularVelocity = m_SwerveSubsystem.driveCommand(
+        () -> MathUtil.applyDeadband(m_driveController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(m_driveController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> MathUtil.applyDeadband(m_driveController.getRightX(), OperatorConstants.RIGHT_X_DEADBAND));
 
-    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+        m_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAngularVelocity);
+
+    autoChooser = new SendableChooser<Command>();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+    autoChooser.setDefaultOption("10ft forward", AutoBuilder.followPath(m_10ft_forward));
   }
 
   private void configureBindings()
   {
 
-    driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-    driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+    m_driveController.a().onTrue((Commands.runOnce(m_SwerveSubsystem::zeroGyro)));
+    m_driveController.x().whileTrue(Commands.runOnce(m_SwerveSubsystem::lock, m_SwerveSubsystem).repeatedly());
   }
 
   /**
@@ -56,14 +63,15 @@ public class RobotContainer
    * @return the command to run in autonomous
    */
 
-  public void setDriveMode()
-  {
-    //drivebase.setDefaultCommand();
-  }
-
   public void setMotorBrake(boolean brake)
   {
-    drivebase.setMotorBrake(brake);
+    m_SwerveSubsystem.setMotorBrake(brake);
+  }
+
+  public Command getAutonomousCommand()
+  {
+    m_SwerveSubsystem.zeroGyro();
+    return autoChooser.getSelected();
   }
 
   

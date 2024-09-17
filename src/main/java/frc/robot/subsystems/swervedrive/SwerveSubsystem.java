@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.AutonConstants;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -16,6 +17,10 @@ import swervelib.parser.SwerveParser;
 
 import java.io.File;
 import java.util.function.DoubleSupplier;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 public class SwerveSubsystem extends SubsystemBase {
 
@@ -35,6 +40,8 @@ public class SwerveSubsystem extends SubsystemBase {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+
+    setupPathPlanner();
   }
 
   /**
@@ -57,11 +64,6 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveDrive.driveFieldOriented(velocity);
   }
 
-  /**
-   * Reset odometry to a specific pose.
-   *
-   * @param pose The pose to reset odometry to.
-   */
   public void resetOdometry(Pose2d pose) {
     swerveDrive.resetOdometry(pose);
   }
@@ -144,5 +146,40 @@ public class SwerveSubsystem extends SubsystemBase {
   public void lock()
   {
     swerveDrive.lockPose();
+  }
+
+    public void setupPathPlanner()
+    {
+      AutoBuilder.configureHolonomic(
+        this::getPose,
+        this::resetOdometry, 
+        this::getRobotVelocity, 
+        this::setChassisSpeeds, 
+        new HolonomicPathFollowerConfig( 
+                                         AutonConstants.TRANSLATION_PID,
+                                         AutonConstants.ANGLE_PID,
+                                         AutonConstants.AUTO_MAX_SPEED,
+                                         swerveDrive.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
+                                         new ReplanningConfig()
+        ),
+        () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+          var alliance = DriverStation.getAlliance();
+          return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
+        },
+        this // Reference to this subsystem to set requirements
+                                  );
+  }
+
+  public ChassisSpeeds getRobotVelocity()
+  {
+    return swerveDrive.getRobotVelocity();
+  }
+
+  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds)
+  {
+    swerveDrive.setChassisSpeeds(chassisSpeeds);
   }
 }
