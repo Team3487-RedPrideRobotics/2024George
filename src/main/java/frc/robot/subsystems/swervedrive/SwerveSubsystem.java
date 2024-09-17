@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.AutonConstants;
+import frc.robot.Constants.AutoConstants;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -156,9 +156,9 @@ public class SwerveSubsystem extends SubsystemBase {
         this::getRobotVelocity, 
         this::setChassisSpeeds, 
         new HolonomicPathFollowerConfig( 
-                                         AutonConstants.TRANSLATION_PID,
-                                         AutonConstants.ANGLE_PID,
-                                         AutonConstants.AUTO_MAX_SPEED,
+                                         AutoConstants.TRANSLATION_PID,
+                                         AutoConstants.ANGLE_PID,
+                                         AutoConstants.AUTO_MAX_SPEED,
                                          swerveDrive.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
                                          new ReplanningConfig()
         ),
