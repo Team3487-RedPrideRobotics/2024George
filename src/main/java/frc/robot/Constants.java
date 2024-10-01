@@ -37,7 +37,7 @@ public final class Constants {
     {
   
       // Hold time on motor brakes when disabled
-      public static final double WHEEL_LOCK_TIME = 0; // seconds
+      public static final double WHEEL_LOCK_TIME = 5; // seconds
     }
   
 }

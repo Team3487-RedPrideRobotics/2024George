@@ -25,7 +25,10 @@ public class RobotContainer
   final CommandXboxController m_driveController = new CommandXboxController(1);
   private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
 
-  private final PathPlannerPath m_10ft_forward = PathPlannerPath.fromPathFile("Straight Line");                                                              
+  private final PathPlannerPath m_10ft_forward = PathPlannerPath.fromPathFile("Straight Line");   
+  private final PathPlannerPath m_curve = PathPlannerPath.fromPathFile("Curve");     
+  private final PathPlannerPath m_try = PathPlannerPath.fromPathFile("Try");                                                         
+                                                           
 
   public SendableChooser<Command> autoChooser;
   public RobotContainer()
@@ -41,7 +44,9 @@ public class RobotContainer
 
     autoChooser = new SendableChooser<Command>();
     SmartDashboard.putData("Auto Chooser", autoChooser);
-    autoChooser.setDefaultOption("10ft forward", AutoBuilder.followPath(m_10ft_forward));
+    autoChooser.setDefaultOption("10ft forward", AutoBuilder.followPath(m_try));
+    //autoChooser.addOption("Curve", AutoBuilder.followPath(m_curve));
+    //autoChooser.addOption("Try", AutoBuilder.followPath(m_try));
   }
 
   private void configureBindings()
@@ -64,6 +69,7 @@ public class RobotContainer
 
   public Command getAutonomousCommand()
   {
+    m_SwerveSubsystem.resetOdometry(m_SwerveSubsystem.getPose());
     m_SwerveSubsystem.zeroGyro();
     return autoChooser.getSelected();
   }
