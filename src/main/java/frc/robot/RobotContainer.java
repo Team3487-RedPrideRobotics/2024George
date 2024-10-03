@@ -44,9 +44,9 @@ public class RobotContainer
 
     autoChooser = new SendableChooser<Command>();
     SmartDashboard.putData("Auto Chooser", autoChooser);
-    autoChooser.setDefaultOption("10ft forward", AutoBuilder.followPath(m_try));
-    //autoChooser.addOption("Curve", AutoBuilder.followPath(m_curve));
-    //autoChooser.addOption("Try", AutoBuilder.followPath(m_try));
+    autoChooser.setDefaultOption("10ft forward", AutoBuilder.followPath(m_10ft_forward));
+    autoChooser.addOption("Curve", AutoBuilder.followPath(m_curve));
+    autoChooser.addOption("Try", AutoBuilder.followPath(m_try));
   }
 
   private void configureBindings()

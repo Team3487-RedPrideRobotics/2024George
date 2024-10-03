@@ -16,7 +16,6 @@ public final class Constants {
     public static class OperatorConstants
     {
 
-        // Joystick Deadband
         public static final double LEFT_X_DEADBAND  = 0.1;
         public static final double LEFT_Y_DEADBAND  = 0.1;
         public static final double RIGHT_X_DEADBAND = 0.1;
@@ -29,7 +28,7 @@ public final class Constants {
 
         public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
         public static final PIDConstants ANGLE_PID       = new PIDConstants(0.4, 0, 0.01);
-        public static final double AUTO_MAX_SPEED = 4.5; //  meters per seconds
+        public static final double AUTO_MAX_SPEED = 4.5; //  meters per second
     }
 
     
