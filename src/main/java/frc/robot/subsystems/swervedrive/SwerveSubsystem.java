@@ -155,7 +155,7 @@ public class SwerveSubsystem extends SubsystemBase {
         this::getPose,
         this::resetOdometry, 
         this::getRobotVelocity, 
-        this::setChassisSpeeds, 
+        this::setChassisSpeeds, //RobotCentric 
         new HolonomicPathFollowerConfig( 
                                          AutoConstants.TRANSLATION_PID,
                                          AutoConstants.ANGLE_PID,

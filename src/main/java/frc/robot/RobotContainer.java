@@ -5,8 +5,10 @@
 package frc.robot;
 
 import java.io.File;
+import java.util.List;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
@@ -28,7 +30,7 @@ public class RobotContainer
   private final PathPlannerPath m_10ft_forward = PathPlannerPath.fromPathFile("Straight Line");   
   private final PathPlannerPath m_curve = PathPlannerPath.fromPathFile("Curve");     
   private final PathPlannerPath m_try = PathPlannerPath.fromPathFile("Try");                                                         
-                                                           
+
 
   public SendableChooser<Command> autoChooser;
   public RobotContainer()
@@ -44,7 +46,7 @@ public class RobotContainer
 
     autoChooser = new SendableChooser<Command>();
     SmartDashboard.putData("Auto Chooser", autoChooser);
-    autoChooser.setDefaultOption("10ft forward", AutoBuilder.followPath(m_10ft_forward));
+    autoChooser.setDefaultOption("10ft forward", AutoBuilder.buildAuto("Auto"));
     autoChooser.addOption("Curve", AutoBuilder.followPath(m_curve));
     autoChooser.addOption("Try", AutoBuilder.followPath(m_try));
   }
@@ -69,9 +71,9 @@ public class RobotContainer
 
   public Command getAutonomousCommand()
   {
-    m_SwerveSubsystem.resetOdometry(m_SwerveSubsystem.getPose());
-    m_SwerveSubsystem.zeroGyro();
-    return autoChooser.getSelected();
+    //m_SwerveSubsystem.resetOdometry(m_SwerveSubsystem.getPose());
+    return new PathPlannerAuto("Red Auto");
+    //return autoChooser.getSelected();
   }
 
   
