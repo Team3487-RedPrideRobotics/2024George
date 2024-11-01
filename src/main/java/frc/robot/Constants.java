@@ -26,8 +26,8 @@ public final class Constants {
     public static final class AutoConstants
     {
 
-        public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
-        public static final PIDConstants ANGLE_PID       = new PIDConstants(0.4, 0, 0.01);
+        public static final PIDConstants TRANSLATION_PID = new PIDConstants(22/7, 0, 0);
+        public static final PIDConstants ANGLE_PID       = new PIDConstants(0.5, 0, 0.01);
         public static final double AUTO_MAX_SPEED = 2.57; //  meters per second
     }
 

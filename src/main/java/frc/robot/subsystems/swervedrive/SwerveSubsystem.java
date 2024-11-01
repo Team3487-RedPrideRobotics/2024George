@@ -1,3 +1,4 @@
+
 package frc.robot.subsystems.swervedrive;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -6,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -64,8 +66,11 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveDrive.driveFieldOriented(velocity);
   }
 
-  public void resetOdometry(Pose2d pose) {
-    swerveDrive.resetOdometry(pose);
+  public void resetOdometry(Pose2d _pose) {
+    //Translation2d translation = _pose.getTranslation();
+    //Rotation2d rotation = new Rotation2d(Math.toRadians(180));
+    //Pose2d pose = new Pose2d(translation, rotation);
+    swerveDrive.resetOdometry(_pose);
   }
 
   /**
@@ -104,18 +109,17 @@ public class SwerveSubsystem extends SubsystemBase {
   public Command driveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier rotation) {
     return run(() -> {
       Translation2d translation = new Translation2d(
-        translationX.getAsDouble() * swerveDrive.getMaximumVelocity(),
-        translationY.getAsDouble() * swerveDrive.getMaximumVelocity()
+        -translationX.getAsDouble() * swerveDrive.getMaximumVelocity(),
+        -translationY.getAsDouble() * swerveDrive.getMaximumVelocity()
       );
-      double rot = rotation.getAsDouble() * Math.PI;
+      double rot = -rotation.getAsDouble() * Math.PI;
       driveFieldOriented(new ChassisSpeeds(translation.getX(), translation.getY(), rot));
+      //drive(translation, rot, false);
     });
   }
 
   @Override
   public void periodic() {
-    
-    // Periodic code can be added here
   }
 
   public void setMotorBrake(boolean brake)
