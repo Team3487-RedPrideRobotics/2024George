@@ -25,11 +25,11 @@ public class RobotContainer
 
   final CommandXboxController m_driveController = new CommandXboxController(1);
   private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
-  private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(1,2,3);
+  private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(9,8);
 
-  private final PathPlannerPath m_10ft_forward = PathPlannerPath.fromPathFile("Straight Line");   
-  private final PathPlannerPath m_curve = PathPlannerPath.fromPathFile("Curve");     
-  private final PathPlannerPath m_try = PathPlannerPath.fromPathFile("Try");                                                         
+  //private final PathPlannerPath m_10ft_forward = PathPlannerPath.fromPathFile("Straight Line");   
+  //private final PathPlannerPath m_curve = PathPlannerPath.fromPathFile("Curve");     
+  //private final PathPlannerPath m_try = PathPlannerPath.fromPathFile("Try");                                                         
                                                            
 
   public SendableChooser<Command> autoChooser;
@@ -44,11 +44,11 @@ public class RobotContainer
 
         m_SwerveSubsystem.setDefaultCommand(driveFieldOrientedAngularVelocity);
 
-    autoChooser = new SendableChooser<Command>();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-    autoChooser.setDefaultOption("10ft forward", AutoBuilder.followPath(m_10ft_forward));
-    autoChooser.addOption("Curve", AutoBuilder.followPath(m_curve));
-    autoChooser.addOption("Try", AutoBuilder.followPath(m_try));
+    //autoChooser = new SendableChooser<Command>();
+    //SmartDashboard.putData("Auto Chooser", autoChooser);
+    //autoChooser.setDefaultOption("10ft forward", AutoBuilder.followPath(m_10ft_forward));
+    //autoChooser.addOption("Curve", AutoBuilder.followPath(m_curve));
+    //autoChooser.addOption("Try", AutoBuilder.followPath(m_try));
   }
 
   private void configureBindings()
@@ -56,8 +56,10 @@ public class RobotContainer
 
     m_driveController.a().onTrue((Commands.runOnce(m_SwerveSubsystem::zeroGyro)));
     m_driveController.x().whileTrue(Commands.runOnce(m_SwerveSubsystem::lock, m_SwerveSubsystem).repeatedly());
-    m_driveController.rightTrigger(0.1).whileTrue(Commands.runOnce(m_IntakeSubsystem::intakeIn, m_IntakeSubsystem).repeatedly());
-    m_driveController.leftTrigger(0.1).whileTrue(Commands.runOnce(m_IntakeSubsystem::intakeOut, m_IntakeSubsystem).repeatedly());
+
+    //Intake
+    //m_driveController.rightTrigger(0.1).whileTrue(Commands.startEnd(m_IntakeSubsystem::intakeIn, m_IntakeSubsystem::intakeStop, m_IntakeSubsystem));
+    //m_driveController.leftTrigger(0.1).whileTrue(Commands.startEnd(m_IntakeSubsystem::intakeOut, m_IntakeSubsystem::intakeStop, m_IntakeSubsystem));
 
   }
 
@@ -74,9 +76,11 @@ public class RobotContainer
 
   public Command getAutonomousCommand()
   {
-    m_SwerveSubsystem.resetOdometry(m_SwerveSubsystem.getPose());
-    m_SwerveSubsystem.zeroGyro();
-    return autoChooser.getSelected();
+    //m_SwerveSubsystem.resetOdometry(m_SwerveSubsystem.getPose());
+    //m_SwerveSubsystem.zeroGyro();
+    //return autoChooser.getSelected();
+    return new Command() {
+    };
   }
 
   
