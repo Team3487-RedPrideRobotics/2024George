@@ -19,12 +19,13 @@ public class IntakeSubsystem extends SubsystemBase {
     }
     
     public void intakeIn(){
-        IntakeInOut.set(1);
+        IntakeInOut.set(-0.4);
     }
 
     public void intakeOut(){
-        IntakeInOut.set(-1);
+        IntakeInOut.set(0.4);
     }
+
     public void intakeStop(){
         IntakeInOut.set(0);
     }
@@ -32,6 +33,20 @@ public class IntakeSubsystem extends SubsystemBase {
     public void intakeLeverSpeed(double speed){
         IntakeLever.set(speed);
     }
+
+    public void leverUp(){
+        IntakeLever.set(1);
+    }
+
+    public void leverDown(){
+        IntakeLever.set(-1);
+    }
+
+    public void leverStop(){
+        IntakeLever.set(0);
+    }
+
+    
 
     public boolean goToAngle(double lever, double limit, double kP, double threshold){
         double delta = Math.abs(lever) - Math.abs(LeverEncoder.getPosition());

@@ -25,7 +25,7 @@ public class RobotContainer
 
   final CommandXboxController m_driveController = new CommandXboxController(1);
   private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve"));
-  private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(9,8);
+  private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem(9,10);
 
   //private final PathPlannerPath m_10ft_forward = PathPlannerPath.fromPathFile("Straight Line");   
   //private final PathPlannerPath m_curve = PathPlannerPath.fromPathFile("Curve");     
@@ -58,8 +58,12 @@ public class RobotContainer
     m_driveController.x().whileTrue(Commands.runOnce(m_SwerveSubsystem::lock, m_SwerveSubsystem).repeatedly());
 
     //Intake
-    //m_driveController.rightTrigger(0.1).whileTrue(Commands.startEnd(m_IntakeSubsystem::intakeIn, m_IntakeSubsystem::intakeStop, m_IntakeSubsystem));
-    //m_driveController.leftTrigger(0.1).whileTrue(Commands.startEnd(m_IntakeSubsystem::intakeOut, m_IntakeSubsystem::intakeStop, m_IntakeSubsystem));
+    m_driveController.rightTrigger(0.1).whileTrue(Commands.startEnd(m_IntakeSubsystem::intakeIn, m_IntakeSubsystem::intakeStop, m_IntakeSubsystem));
+    m_driveController.leftTrigger(0.1).whileTrue(Commands.startEnd(m_IntakeSubsystem::intakeOut, m_IntakeSubsystem::intakeStop, m_IntakeSubsystem));
+
+    m_driveController.leftBumper().whileTrue(Commands.startEnd(m_IntakeSubsystem::leverDown, m_IntakeSubsystem::leverStop, m_IntakeSubsystem));
+    m_driveController.rightBumper().whileTrue(Commands.startEnd(m_IntakeSubsystem::leverUp, m_IntakeSubsystem::leverStop, m_IntakeSubsystem));
+
 
   }
 
@@ -74,14 +78,7 @@ public class RobotContainer
     m_SwerveSubsystem.setMotorBrake(brake);
   }
 
-  public Command getAutonomousCommand()
-  {
-    //m_SwerveSubsystem.resetOdometry(m_SwerveSubsystem.getPose());
-    //m_SwerveSubsystem.zeroGyro();
-    //return autoChooser.getSelected();
-    return new Command() {
-    };
-  }
+  
 
   
 }
